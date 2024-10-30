@@ -1,5 +1,5 @@
-const { type } = require('express/lib/response');
-const mongoose = require('mongoose');
+const { type } = require("express/lib/response");
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -27,7 +27,7 @@ const userSchema = new Schema({
     trim: true,
   },
 
-  bornDate: { type: String, required: true },
+  bornDate: { type: String },
 
   location: {
     type: String,
@@ -35,14 +35,11 @@ const userSchema = new Schema({
     minglength: 3,
     maxlength: 100,
   },
-
-  image: {
-    type: String,
-  },
+  image: { type: String, default: "UserDefault.jfif" },
   role: {
     type: String,
-    default: 'client',
-    enum: ['client', 'admin', 'superadmin'],
+    default: "client",
+    enum: ["client", "admin", "superadmin"],
   },
 
   ceatedAt: {
@@ -51,4 +48,4 @@ const userSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);
