@@ -129,8 +129,6 @@ async function webHook(req, res) {
     const payment = req.query;
     console.log("Webhook recibido:", payment);
 
-    // Aquí puedes manejar la información del webhook para actualizar el estado de la orden en tu base de datos.
-
     res.status(200).send("OK");
   } catch (error) {
     console.error("Error en el webhook:", error);
