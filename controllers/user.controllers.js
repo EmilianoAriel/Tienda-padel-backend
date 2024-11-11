@@ -4,7 +4,7 @@ const { json } = require("express/lib/response");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 const SECRET = process.env.SECRET;
-const { unlink } = require("fs").promises;
+const fs = require("fs").promises;
 const path = require("path");
 async function getUsers(req, res) {
   try {
@@ -120,7 +120,7 @@ async function deleteUsers(req, res) {
       );
 
       try {
-        await unlink(imagePath);
+        await fs.unlink(imagePath);
         console.log("Imagen eliminada:", imagePath);
       } catch (error) {
         console.log("Error al eliminar la imagen:", error);
@@ -151,9 +151,25 @@ async function updateUser(req, res) {
       });
     }
     const user = await User.findByIdAndUpdate(id, req.body, { new: true });
+
     if (req.file) {
-      user.image = req.file.filename;
-      await user.save();
+      const imagePath = path.join(
+        __dirname,
+        "..",
+        "public",
+        "images",
+        "users",
+        user.image
+      );
+
+      try {
+        await fs.unlink(imagePath);
+        console.log("Imagen eliminada:", imagePath);
+        user.image = req.file.filename;
+        await user.save();
+      } catch (error) {
+        console.log("Error al eliminar la imagen:", error);
+      }
     }
 
     return res.status(200).send({
@@ -197,8 +213,6 @@ async function login(req, res) {
 
     user.password = undefined;
     user.__v = undefined;
-
-    // const token = jwt.sign(JSON.stringify(user), SECRET);
 
     const token = jwt.sign(user.toJSON(), SECRET, { expiresIn: "1d" });
 
