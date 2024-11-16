@@ -7,11 +7,7 @@ const upload = require("../middlewares/uploadFile");
 
 router.get("/users", [validation, isAdmin], userControllers.getUsers);
 
-router.post(
-  "/users",
-  [validation, isAdmin, upload],
-  userControllers.createUser
-);
+router.post("/users", [upload], userControllers.createUser);
 
 router.get("/users/:id", userControllers.getUserById);
 
